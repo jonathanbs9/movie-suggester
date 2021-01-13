@@ -1,19 +1,24 @@
 package api
 
+import (
+	"github.com/jonathanbs9/movie-suggester/internal/database"
+)
+
 type Services struct {
 	search MovieSearch
 }
 
 func NewServices() Services {
+	client := database.NewMySQLClient()
 	return Services{
-		search: &MovieService{},
+		search: &MovieService{client},
 	}
 }
 
 type WebServices struct {
-	s Services
+	Services
 }
 
 func start() *WebServices {
-	return &WebServices{s: NewServices()}
+	return &WebServices{NewServices()}
 }
