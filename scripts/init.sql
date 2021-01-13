@@ -3,7 +3,7 @@ CREATE TABLE movies.movie
     id           varchar(100) NOT NULL,
     title        varchar(100) NOT NULL,
     `cast`       varchar(250) NULL,
-    release_date DATE         NULL,
+    release_date varchar(100) NULL,
     genre        varchar(100) NULL,
     director     varchar(100) NULL,
     CONSTRAINT movie_PK PRIMARY KEY (id)
@@ -38,3 +38,7 @@ CREATE TABLE movies.wish_list
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
+
+INSERT INTO `movie`(`id`, `title`, `cast`, `release_date`, `genre`, `director`) VALUES ("d6b8af66-1739-44cd-b3a0-72d54fe2445e","Blade Runner","Harrison Ford","1982-07-15","Ciencia Ficción","Ridley Scott");
+
+INSERT INTO `movie`(`id`, `title`, `cast`, `release_date`, `genre`, `director`) VALUES ("674181c6-b3f3-49d1-a125-f15929739c1d","Cape Fear","Robert De Niro, Gregory Peck","1991-11-13","Suspenso, Drama","Martin Scorsese");
