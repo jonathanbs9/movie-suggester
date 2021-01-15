@@ -6,12 +6,14 @@ import (
 
 type Services struct {
 	search MovieSearch
+	users  UserGateway
 }
 
 func NewServices() Services {
 	client := database.NewMySQLClient()
 	return Services{
 		search: &MovieService{client},
+		users:  &UserService{client},
 	}
 }
 
