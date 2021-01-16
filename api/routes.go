@@ -1,23 +1,22 @@
 package api
 
 import (
-	"github.com/gofiber/fiber"
-	jwtware "github.com/gofiber/jwt"
+	"github.com/gofiber/fiber/v2"
 )
 
-func SetupMoviesRoutes(app *fiber.App) {
-	s := start()
+func SetupMoviesRoutes(app *fiber.App, tokenKey string) {
+	s := start(tokenKey)
 	grp := app.Group("/movies")
 	grp.Get("/", s.SearchMovieHandler)
 }
 
-func SetupUsersRoutes(app *fiber.App) {
-	s := start()
+func SetupUsersRoutes(app *fiber.App, tokenKey string) {
+	s := start(tokenKey)
 	grp := app.Group("/users")
 	grp.Post("/", s.CreateUserHandler)
+	grp.Post("/login", s.LoginHandler)
+	grp.Get("/video", s.ServeVideo)
 
-	grp.Use(jwtware.New(jwtware.Config{
-		SigningKey: []byte("myscretkey-changeme"),
-	})).Get("/wishlist", s.WishListHandler)
+	//grp.Use(jwtMiddleware(tokenKey)).Post("/wishlist", s.WishListHandler)
 
 }

@@ -20,7 +20,7 @@ type UserSummary struct {
 
 type UserGateway interface {
 	SaveUser(cmd CreateUserCMD) (*UserSummary, error)
-	Login()
+	Login(cmd LoginCMD) string
 }
 
 type UserService struct {
@@ -45,6 +45,21 @@ func (us *UserService) SaveUser(cmd CreateUserCMD) (*UserSummary, error) {
 	}, nil
 }
 
-func (us *UserService) Login() {
+/*
+*	La funcion Login va a devolver un JWT de tipo string.
+*	La idea es saber si tenemos ese usuario que nos pasan
+*   con sus respectivas credenciales
+ */
+func (us *UserService) Login(cmd LoginCMD) string {
+	var id string
+	// Hacemos un scan para ver si realmente existe un id dentro del row
+	err := us.QueryRow(GetLoginQuery(), cmd.Username, cmd.Password).Scan(&id)
+
+	if err != nil {
+		logs.Error(err.Error())
+		return ""
+	}
+
+	return id
 
 }

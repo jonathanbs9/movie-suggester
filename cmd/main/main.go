@@ -1,21 +1,43 @@
 package main
 
 import (
-	"github.com/gofiber/fiber"
-	jwtware "github.com/gofiber/jwt"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/jonathanbs9/movie-suggester/api"
-	"github.com/jonathanbs9/movie-suggester/internal"
 )
 
 func main() {
-	app := fiber.New()
-	internal.SetErrorHandler(app)
-	api.SetupMoviesRoutes(app)
-	api.SetupUsersRoutes(app)
+	app := fiber.New(fiber.Config{
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			// Status code por defecto 500
+			code := fiber.StatusInternalServerError
+			var msg string
 
-	app.Use(jwtware.New(jwtware.Config{
-		SigningKey: []byte("mysecretkey-changeme"),
-	}))
+			// Recupera el codido de estado personalizado si es un fiber error
+			if e, ok := err.(*fiber.Error); ok {
+				code = e.Code
+				msg = e.Message
+			}
 
-	_ = app.Listen(3001)
+			if msg == "" {
+				msg = "No se puede procesar la llamada HTTP"
+			}
+
+			// Envía custom error page
+			err = ctx.Status(code).JSON(internalError{
+				Message: msg,
+			})
+			return nil
+		},
+	})
+
+	key := "tokenKey"
+	app.Use(recover.New())
+	api.SetupMoviesRoutes(app, key)
+	api.SetupUsersRoutes(app, key)
+	_ = app.Listen(":3001")
+}
+
+type internalError struct {
+	Message string `json:"message"`
 }
