@@ -63,5 +63,10 @@ func getMoviesQuery(filter MovieFilter) string {
 }
 
 func CreateUserQuery() string {
+	// Query para crear User
 	return "insert into user (id, username, password) values (?, ?, ?)"
+}
+
+func GetLoginQuery() string {
+	return "select id from user where usermame =  ? and password = ?"
 }

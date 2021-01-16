@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/jonathanbs9/movie-suggester/internal/database"
+	embedded "github.com/tomiok/fuego-cache/clients/inmemory"
 )
 
 type Services struct {
@@ -19,8 +20,11 @@ func NewServices() Services {
 
 type WebServices struct {
 	Services
+	tokenKey string
+	cache    *embedded.FuegoInMemory
 }
 
-func start() *WebServices {
-	return &WebServices{NewServices()}
+func start(tokenKey string) *WebServices {
+	inMemoryDB := embedded.NewInMemory(false, "")
+	return &WebServices{NewServices(), tokenKey, inMemoryDB}
 }
