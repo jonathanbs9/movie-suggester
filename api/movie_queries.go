@@ -68,5 +68,9 @@ func CreateUserQuery() string {
 }
 
 func GetLoginQuery() string {
-	return "select id from user where usermame =  ? and password = ?"
+	return "select id from user where username =  ? and password = ?"
+}
+
+func GetAddWishMovieQuery() string {
+	return "insert into wish_list (user_id, movie_id, comment ) values (?, ?, ?)"
 }

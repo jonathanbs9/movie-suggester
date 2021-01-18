@@ -35,19 +35,26 @@ func signToken(tokenkey, id string) string {
 	return t
 }
 
+/* Creamos una funcion para extraer el ID de usuario desde
+ * un JWT.
+ */
 func extractUserIDFromJWT(bearer, tokenKey string) string {
+	// Le extraigo el "bearer " al token.
 	token := bearer[7:]
 	logs.Info(token)
 	t, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
 		return []byte(tokenKey), nil
 	})
 
+	// Si no devuelve el token, error..
 	if err != nil {
 		return ""
 	}
 
+	// Si hay token ...
 	if t.Valid {
 		claims := t.Claims.(jwt.MapClaims)
+		//Obtengo el id
 		return claims["sub"].(string)
 	}
 

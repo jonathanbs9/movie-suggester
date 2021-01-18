@@ -4,6 +4,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+/***************************
+ *   Create User Handler   *
+ ***************************/
 func (w *WebServices) CreateUserHandler(c *fiber.Ctx) error {
 
 	var cmd CreateUserCMD
@@ -37,23 +40,30 @@ func (w *WebServices) CreateUserHandler(c *fiber.Ctx) error {
 	_ = c.JSON(res)
 }*/
 
-/*func (w *WebServices) WishListHandler(c *fiber.Ctx) error {
+/*************************
+ *   Wish List Handler   *
+ *************************/
+func (w *WebServices) WishListHandler(c *fiber.Ctx) error {
 	var cmd WishMovieCMD
 	_ = c.BodyParser(&cmd)
+
 	bearer := c.Get("Authorization")
 	userID := extractUserIDFromJWT(bearer, w.tokenKey)
+
 	err := w.users.AddWishMovie(userID, cmd.MovieID, cmd.Comment)
 
+	// Si hay error..
 	if err != nil {
-		return fiber.NewError(400, "No se puede agregar a la lista de deseos")
+		return fiber.NewError(400, "No se puede agregar a la lista de deseos =>"+err.Error())
 	}
+
 	// caso exitoso, devolvemos mensaje que se agregó la pelicula
 	return c.JSON(struct {
 		Wishlist string `json:"result"`
 	}{
-		Wishlist: "Película agregada a la WishList",
+		Wishlist: "Película agregada a la lista de deseos",
 	})
-}*/
+}
 
 /* Crea un espacio de video con html
 *  Endpoint :3001/users/video
@@ -71,9 +81,9 @@ func (w *WebServices) ServeVideo(c *fiber.Ctx) error {
 	return nil
 }
 
-/* Login Handler
- *
- */
+/*********************
+ *   Login Handler   *
+ ********************/
 func (w *WebServices) LoginHandler(c *fiber.Ctx) error {
 	var cmd LoginCMD
 	err := c.BodyParser(&cmd)
@@ -86,7 +96,7 @@ func (w *WebServices) LoginHandler(c *fiber.Ctx) error {
 
 	// Si no existe el User
 	if id == "" {
-		return fiber.NewError(400, "Usuario no ha sido encontrado")
+		return fiber.NewError(404, "Usuario no ha sido encontrado")
 	}
 
 	return c.JSON(struct {

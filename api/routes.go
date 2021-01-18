@@ -17,6 +17,6 @@ func SetupUsersRoutes(app *fiber.App, tokenKey string) {
 	grp.Post("/login", s.LoginHandler)
 	grp.Get("/video", s.ServeVideo)
 
-	//grp.Use(jwtMiddleware(tokenKey)).Post("/wishlist", s.WishListHandler)
+	grp.Use(jwtMiddleware(tokenKey)).Post("/wishlist", s.WishListHandler)
 
 }

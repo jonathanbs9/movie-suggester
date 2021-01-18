@@ -21,6 +21,7 @@ type UserSummary struct {
 type UserGateway interface {
 	SaveUser(cmd CreateUserCMD) (*UserSummary, error)
 	Login(cmd LoginCMD) string
+	AddWishMovie(userID, movieID, comment string) error
 }
 
 type UserService struct {
@@ -61,5 +62,16 @@ func (us *UserService) Login(cmd LoginCMD) string {
 	}
 
 	return id
+
+}
+
+func (us *UserService) AddWishMovie(userID, movieID, comment string) error {
+	_, err := us.Exec(GetAddWishMovieQuery(), userID, movieID, comment)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
